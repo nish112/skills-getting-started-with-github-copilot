@@ -20,6 +20,14 @@ current_dir = Path(__file__).parent
 app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent,
           "static")), name="static")
 
+# Mockup staff profile data
+staff_profile = {
+    "first_name": "Jane",
+    "last_name": "Smith",
+    "email": "j.smith@mergington.edu",
+    "category": "Science Teacher"
+}
+
 # In-memory activity database
 activities = {
     "Chess Club": {
@@ -82,6 +90,11 @@ activities = {
 @app.get("/")
 def root():
     return RedirectResponse(url="/static/index.html")
+
+
+@app.get("/staff/profile")
+def get_staff_profile():
+    return staff_profile
 
 
 @app.get("/activities")

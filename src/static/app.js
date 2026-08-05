@@ -138,6 +138,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Staff profile icon
+  const staffIconBtn = document.getElementById("staff-icon-btn");
+  const staffMenu = document.getElementById("staff-menu");
+
+  async function loadStaffProfile() {
+    try {
+      const response = await fetch("/staff/profile");
+      const staff = await response.json();
+      document.getElementById("staff-name").textContent = `${staff.first_name} ${staff.last_name}`;
+      document.getElementById("staff-email").textContent = staff.email;
+      document.getElementById("staff-category").textContent = staff.category;
+    } catch (error) {
+      console.error("Error loading staff profile:", error);
+    }
+  }
+
+  staffIconBtn.addEventListener("click", () => {
+    staffMenu.classList.toggle("visible");
+  });
+
+  staffIconBtn.addEventListener("mouseenter", () => {
+    staffMenu.classList.add("visible");
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!staffIconBtn.contains(event.target) && !staffMenu.contains(event.target)) {
+      staffMenu.classList.remove("visible");
+    }
+  });
+
+  loadStaffProfile();
+
   // Initialize app
   fetchActivities();
 });
