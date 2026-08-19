@@ -25,3 +25,16 @@ def test_unregister_nonexistent_participant_returns_404():
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Participant not found"
+
+
+def test_get_employee_profile_returns_expected_fields():
+    response = client.get("/employee/profile")
+
+    assert response.status_code == 200
+
+    profile = response.json()
+    assert set(profile.keys()) == {"first_name", "last_name", "email", "category"}
+    assert profile["first_name"]
+    assert profile["last_name"]
+    assert "@" in profile["email"]
+    assert profile["category"]

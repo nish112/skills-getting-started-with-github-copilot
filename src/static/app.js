@@ -3,6 +3,44 @@ document.addEventListener("DOMContentLoaded", () => {
   const activitySelect = document.getElementById("activity");
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
+  const profileIconButton = document.getElementById("profile-icon-button");
+  const profileCard = document.getElementById("profile-card");
+
+  // Function to fetch the staff profile shown in the header menu
+  async function fetchEmployeeProfile() {
+    try {
+      const response = await fetch("/employee/profile");
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+      const profile = await response.json();
+
+      document.getElementById("profile-name").textContent =
+        `${profile.first_name} ${profile.last_name}`;
+      document.getElementById("profile-email").textContent = profile.email;
+      document.getElementById("profile-category").textContent = profile.category;
+    } catch (error) {
+      document.getElementById("profile-name").textContent = "Unable to load profile";
+      document.getElementById("profile-email").textContent = "";
+      document.getElementById("profile-category").textContent = "";
+      console.error("Error fetching employee profile:", error);
+    }
+  }
+
+  // Toggle the profile card on click (in addition to the CSS hover/focus
+  // behavior) so it also works well on touch devices.
+  profileIconButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const isVisible = profileCard.classList.toggle("visible");
+    profileIconButton.setAttribute("aria-expanded", isVisible);
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest("#profile-menu")) {
+      profileCard.classList.remove("visible");
+      profileIconButton.setAttribute("aria-expanded", "false");
+    }
+  });
 
   // Function to fetch activities from API
   async function fetchActivities() {
@@ -140,4 +178,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize app
   fetchActivities();
+  fetchEmployeeProfile();
 });

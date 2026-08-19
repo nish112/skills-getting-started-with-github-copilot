@@ -79,6 +79,17 @@ activities = {
 }
 
 
+# Mock staff/employee profile data used to power the profile menu on the
+# home page. In a real system this would come from an authentication /
+# HR service rather than being hard-coded.
+employee_profile = {
+    "first_name": "Jordan",
+    "last_name": "Rivera",
+    "email": "jordan.rivera@mergington.edu",
+    "category": "Teacher",
+}
+
+
 @app.get("/")
 def root():
     return RedirectResponse(url="/static/index.html")
@@ -87,6 +98,12 @@ def root():
 @app.get("/activities")
 def get_activities():
     return activities
+
+
+@app.get("/employee/profile")
+def get_employee_profile():
+    """Return the profile details for the currently signed-in staff member"""
+    return employee_profile
 
 
 @app.post("/activities/{activity_name}/signup")
