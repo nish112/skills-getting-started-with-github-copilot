@@ -25,3 +25,24 @@ def test_unregister_nonexistent_participant_returns_404():
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Participant not found"
+
+
+def test_activities_include_staff_details():
+    response = client.get("/activities")
+
+    assert response.status_code == 200
+    assert all(
+        "staff" in activity and isinstance(activity["staff"], str) and activity["staff"].strip()
+        for activity in response.json().values()
+    )
+
+
+def test_static_site_uses_dark_red_theme_and_renders_staff():
+    styles = client.get("/static/styles.css")
+    app_script = client.get("/static/app.js")
+
+    assert styles.status_code == 200
+    assert "#7f1d1d" in styles.text
+    assert "#1a237e" not in styles.text
+    assert app_script.status_code == 200
+    assert 'class="staff-detail"' in app_script.text
