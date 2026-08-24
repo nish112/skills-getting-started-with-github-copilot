@@ -31,7 +31,10 @@ def test_activities_include_staff_details():
     response = client.get("/activities")
 
     assert response.status_code == 200
-    assert all(activity["staff"] for activity in response.json().values())
+    assert all(
+        "staff" in activity and isinstance(activity["staff"], str) and activity["staff"].strip()
+        for activity in response.json().values()
+    )
 
 
 def test_static_site_uses_dark_red_theme_and_renders_staff():
